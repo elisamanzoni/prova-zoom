@@ -149,10 +149,12 @@ function left_function(){
 
 function top_function(){
   if (top_g== (-(wg-canvas.height))){
-    top_g=(-(wg-canvas.height))
+    top_g=(-(wg-canvas.height));
+    topButton.hide();
   }
   else{
   top_g-=50;
+  topButton.show();
 }
 }
 
