@@ -10,6 +10,16 @@
       margin: 0;
     }
 
+    .loading_text{
+      position: absolute;
+      transform: translate(-50%, 0);
+      left: 50vw;
+      text-align: center;
+      top: 60vh;
+      font-size: 30pt;
+      font-family: sans-serif;
+    }
+
     .mosaic{
       position: absolute;
       transform: translate(-50%, -50%);
@@ -22,17 +32,162 @@
       height:100px;
     }
 
+    .spinner{
+      position: absolute;
+      transform: translate(-50%, -50%);
+      left: 50vw;
+      top: 50vh;
+      width: 200px;
+      height: 200px;
+      /* border: 1px solid black; */
+    }
+
+    .quadrato{
+        position: absolute;
+        width:33%;
+        height: 33%;
+        background-color: blue;
+    }
+
+    .top0{
+      top:0%;
+    }
+
+    .top1{
+      top:33%;
+    }
+
+    .top2{
+      top:66%;
+    }
+
+    .left0{
+      left:0%;
+    }
+
+    .left1{ left:33%;}
+
+    .left2{ left:66%;}
+
+    .q1{ animation: spinner1 2s infinite linear; }
+
+    .q2{ animation: spinner2 2s infinite linear; }
+
+    .q3{ animation: spinner3 2s infinite linear; }
+
+    .q4{ animation: spinner4 2s infinite linear; }
+
+    .q5{ animation: spinner5 2s infinite linear; }
+
+    .q6{ animation: spinner6 2s infinite linear; }
+
+    .q7{ animation: spinner7 2s infinite linear; }
+
+    .q8{ animation: spinner8 2s infinite linear; }
+
+    .q9{ animation: spinner9 2s infinite linear; }
+
+    @keyframes spinner1 {
+      0%{opacity: 0%;}
+      15%{opacity: 100%;}
+      31%{opacity:0%;}
+      100%{opacity:0%;}
+    }
+
+    @keyframes spinner2 {
+      0%{opacity: 0%;}
+      11%{opacity: 0%;}
+      25%{opacity: 100%;}
+      41%{opacity:0%;}
+      100%{opacity:0%;}
+    }
+
+    @keyframes spinner3 {
+      0%{opacity: 0%;}
+      21%{opacity: 0%;}
+      35%{opacity: 100%;}
+      51%{opacity:0%;}
+      100%{opacity:0%;}
+    }
+
+    @keyframes spinner4 {
+      0%{opacity: 0%;}
+      31%{opacity: 0%;}
+      45%{opacity: 100%;}
+      61%{opacity:0%;}
+      100%{opacity:0%;}
+    }
+
+    @keyframes spinner5 {
+      0%{opacity: 0%;}
+      31%{opacity: 0%;}
+      45%{opacity: 100%;}
+      61%{opacity:0%;}
+      100%{opacity:0%;}
+    }
+
+    @keyframes spinner6 {
+      0%{opacity: 0%;}
+      41%{opacity: 0%;}
+      55%{opacity: 100%;}
+      71%{opacity:0%;}
+      100%{opacity:0%;}
+    }
+
+    @keyframes spinner7 {
+      0%{opacity: 0%;}
+      51%{opacity: 0%;}
+      65%{opacity: 100%;}
+      81%{opacity:0%;}
+      100%{opacity:0%;}
+    }
+
+    @keyframes spinner8 {
+      0%{opacity: 0%;}
+      61%{opacity: 0%;}
+      75%{opacity: 100%;}
+      91%{opacity:0%;}
+      100%{opacity:0%;}
+    }
+
+    @keyframes spinner9 {
+      0%{opacity: 0%;}
+      71%{opacity: 0%;}
+      85%{opacity: 100%;}
+      100%{opacity:0%;}
+    }
+
+
+
+
+
+
 
   </style>
   <!-- The core Firebase JS SDK is always required and must be listed first -->
   <script src="https://www.gstatic.com/firebasejs/7.8.1/firebase.js"></script>
   <script src="p5.min.js"></script>
   <script src="p5.sound.min.js"></script>
-  <script src="sketch3-bn-def.js"></script>
+  <script src="sketch_lorem.js"></script>
 </head>
 
 <body>
-  <div id="header"></div>
+  <div id="header">
+    <div id ='spinner' class='spinner'>
+      <div id='q1' class='q7 quadrato top0 left0'></div>
+      <div id='q2' class='q5 quadrato top1 left0'></div>
+      <div id='q3' class='q1 quadrato top2 left0'></div>
+      <div id='q4' class='q3 quadrato top0 left1'></div>
+      <div id='q5' class='q9 quadrato top1 left1'></div>
+      <div id='q6' class='q6 quadrato top2 left1'></div>
+      <div id='q7' class='q8 quadrato top0 left2'></div>
+      <div id='q8' class='q2 quadrato top1 left2'></div>
+      <div id='q9' class='q4 quadrato top2 left2'></div>
+    </div>
+
+    <div id='loading_text' class='loading_text'></div>
+
+  </div>
 
   <div id="text"></div>
 

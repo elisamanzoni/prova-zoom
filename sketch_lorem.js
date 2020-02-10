@@ -47,24 +47,20 @@ var mosaic_shift;
 var elisa_x = 0;
 var elisa_y = 0;
 
-var leftButton;
-var topButton;
-var rightButton;
-var downButton;
-
-
+var loading = 0;
+var loadingText;
+var spinner;
 ////////////////////////////////////
 
 function preload() {
   //load cover
   cover = loadImage('assets/cover14-a.jpg');
 
-
-
   firebaseConfiguration();
 }
 
 function firebaseConfiguration() {
+
   // Your web app's Firebase configuration
   var firebaseConfig = {
     apiKey: "AIzaSyDRzxo_AJMjYQC75jb67nC006ayqVKuB1g",
@@ -84,6 +80,9 @@ function firebaseConfiguration() {
 
 
 function gotData(data) {
+  //if loading == 1 --> downloading the images
+  loading++;
+
   console.log('gotData starting');
   var photolistings = selectAll('photolisting');
 
@@ -101,10 +100,11 @@ function gotData(data) {
     //load tiles for the mosaic
     allImages[j] = loadImage(photo_img);
 
-  //  console.log(j);
+    //  console.log(j);
     //console.log(allImages[j]);
 
     if (j == keys.length - 1) {
+      findNumeroMaxUtilizzi();
       setTimeout(findImageBrightness, keys.length);
     }
   }
@@ -125,15 +125,37 @@ function errData(err) {
   console.log(err);
 }
 
-//------------------------------------------------------------------------------
+
+function findNumeroMaxUtilizzi() {
+  var tilesNeeded = w * h;
+  console.log(tilesNeeded);
+  var tilesAvailable = allImages.length;
+  var tilesRatio = (tilesAvailable / tilesNeeded) * 100;
+
+  if (tilesRatio <= 1) {
+    numeroMaxUtilizzi = 25;
+  } else if (tilesRatio > 1 && tilesRatio <= 2.5) {
+    numeroMaxUtilizzi = 20;
+  } else if (tilesRatio > 2.5 && tilesRatio <= 5) {
+    numeroMaxUtilizzi = 15;
+  } else if (tilesRatio > 5 && tilesRatio <= 10) {
+    numeroMaxUtilizzi = 8;
+  } else if (tilesRatio > 10 && tilesRatio <= 20) {
+    numeroMaxUtilizzi = 4;
+  } else if (tilesRatio > 20 && tilesRatio <= 40) {
+    numeroMaxUtilizzi = 3;
+  } else if (tilesRatio > 40 && tilesRatio <= 65) {
+    numeroMaxUtilizzi = 2;
+  } else if (tilesRatio > 65) {
+    numeroMaxUtilizzi = 1;
+  }
+}
 
 function setup() {
   cnv = createCanvas(800, 800);
   cnv.class('mosaic');
 
-
-
-  cover.width=800;
+  cover.width = 800;
   cover.height = 800;
 
   scl = zoom0;
@@ -150,12 +172,12 @@ function setup() {
   smaller = createImage(w, h);
   smaller.copy(cover, 0, 0, cover.width, cover.height, 0, 0, w, h);
 
-  showButtons();
+
 }
 
 function showButtons() {
 
-  this.newButton = function (_name, _class, _action, _parent) {
+  this.newButton = function(_name, _class, _action, _parent) {
     const button = createButton(_name);
     button.addClass(_class);
     button.parent(_parent);
@@ -163,125 +185,132 @@ function showButtons() {
     return button;
   }
 
-  this.openIndex = function () {
+  this.openIndex = function() {
     window.open('index.html', '_self');
   }
 
-  this.initialize = function () {
+  this.initialize = function() {
     // open homepage
     let backIcon = '<svg style="width:100px;height:100px" viewBox="0 0 24 24"><path fill="currentColor" d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z" /></svg>';
     backButton = this.newButton(backIcon, "iconButton", openIndex, "header");
+    //backButton.hide();
     zoomInButton = this.newButton('zoom In', "zoomInButton, mosaicButton", zoomIn, "header");
+    zoomInButton.hide();
     zoomOutButton = this.newButton('zoom Out', "zoomOutButton, mosaicButton", zoomOut, "header");
+    zoomOutButton.hide();
     leftButton = this.newButton('left', "leftButton, mosaicButton", left, "header");
     leftButton.hide();
     rightButton = this.newButton('right', "rightButton, mosaicButton", right, "header");
     rightButton.hide();
     topButton = this.newButton('top', "topButton, mosaicButton", up, "header");
-    topButton.hide();
+    //topButton.hide();
     downButton = this.newButton('down', "downButton, mosaicButton", down, "header");
-    downButton.hide();
-  }
+    //downButton.hide();
 
+  }
   this.initialize();
 }
-//------------------------------------------------------------------------------
+
+
 function draw() {
+  loadingText = select('#loading_text');
+  spinner = select('#spinner');
+
+  if (loading == 0) {
+    loadingText.html('');
+  } else if (loading == 1) {
+    loadingText.html('Downloading ' + allImages.length +' images');
+  } else if (loading == 2) {
+    loadingText.html('Analyzing the average brightness of each image');
+  } else if (loading == 3) {
+    loadingText.html('Analyzing the brightness of each pixel of the cover');
+  }
 
 }
 
-function zoomIn(){
-mosaic_shift= w;
+function zoomIn() {
+  mosaic_shift = w;
 
   leftButton.show();
   rightButton.show();
   topButton.show();
   downButton.show();
 
-  if(scl == zoom0){
-  scl = zoom1;
-  mosaic_shift= w;
+  if (scl == zoom0) {
+    scl = zoom1;
+    mosaic_shift = w;
 
-}
-else if (scl == zoom1){
-  scl = zoom2;
-  mosaic_shift= w*2;
-}
-
-else if ( scl == zoom2){
-  scl = zoom3;
-  mosaic_shift= w*3;
-}
+  } else if (scl == zoom1) {
+    scl = zoom2;
+    mosaic_shift = w * 2;
+  } else if (scl == zoom2) {
+    scl = zoom3;
+    mosaic_shift = w * 3;
+  }
   drawMosaic();
 }
 
-function zoomOut(){
+function zoomOut() {
 
-if (scl == zoom3){
-  scl = zoom2;
-  mosaic_shift= w*2;
-}
-
-else if(scl==zoom2){
+  if (scl == zoom3) {
+    scl = zoom2;
+    mosaic_shift = w * 2;
+  } else if (scl == zoom2) {
     scl = zoom1;
-    mosaic_shift= w;
-  }
-
-  else if(scl == zoom1){
-    elisa_x=0;
-    elisa_y=0;
+    mosaic_shift = w;
+  } else if (scl == zoom1) {
+    elisa_x = 0;
+    elisa_y = 0;
     scl = zoom0;
     leftButton.hide();
     rightButton.hide();
     topButton.hide();
     downButton.hide();
-}
+  }
   drawMosaic();
 }
 
-function right(){
-  if (elisa_x <= (cnv.width-w*scl)){
-    elisa_x=(cnv.width-w*scl);
-  } else{
+function right() {
+  if (elisa_x <= (cnv.width - w * scl)) {
+    elisa_x = (cnv.width - w * scl);
+  } else {
     elisa_x -= mosaic_shift;
-    console.log(cnv.width-w*scl);
+    console.log(cnv.width - w * scl);
     console.log('elisa x :' + elisa_x);
   }
   drawMosaic();
 }
 
-function left(){
-  if (elisa_x >= 0){
+function left() {
+  if (elisa_x >= 0) {
     elisa_x = 0;
   } else {
     elisa_x += mosaic_shift;
   }
-
   drawMosaic();
 }
 
-function down(){
-  if (elisa_y <= (cnv.height-h*scl)){
-    elisa_y = cnv.height-h*scl;
+function down() {
+  if (elisa_y <= (cnv.height - h * scl)) {
+    elisa_y = cnv.height - h * scl;
   } else {
-  elisa_y -= mosaic_shift;
-}
+    elisa_y -= mosaic_shift;
+  }
   drawMosaic();
-
 }
 
-function up(){
-
-
-  if (elisa_y >= 0){
+function up() {
+  if (elisa_y >= 0) {
     elisa_y = 0;
-  }  else {
-  elisa_y += mosaic_shift;
-}
+  } else {
+    elisa_y += mosaic_shift;
+  }
   drawMosaic();
 }
 
 function analyzeCoverPixels() {
+  //if loading == 3 --> analyzing the brightness of the cover
+  loading++;
 
   //console.log(brgValues);
 
@@ -290,9 +319,9 @@ function analyzeCoverPixels() {
   for (var x = 0; x < w; x++) {
     for (var y = 0; y < h; y++) {
       //index = numero del pixel della cover
-      var index = x + y *w;
+      var index = x + y * w;
 
-//get the color of the pixel
+      //get the color of the pixel
       var tempC = smaller.get(x, y);
 
       // push();
@@ -337,10 +366,6 @@ function analyzeCoverPixels() {
 
   drawMosaic();
 
-
-
-
-
   var tiles_utilizzate = quadratiNeri + fotoUsate
   //console.log('tiles necessarie = ' + smaller.width * smaller.height);
   //console.log('tiles utilizzate = ' + tiles_utilizzate);
@@ -350,9 +375,17 @@ function analyzeCoverPixels() {
 }
 
 function drawMosaic() {
+
+  showButtons();
+  spinner.hide();
+  loadingText.hide();
+
+  // zoomInButton.show();
+  // zoomOutButton.show();
+
   clear();
   fill('black');
-  rect(0,0,width,height);
+  rect(0, 0, width, height);
   //for every pixel of the cover (resized)
   for (var x = 0; x < w; x++) {
     for (var y = 0; y < h; y++) {
@@ -366,16 +399,17 @@ function drawMosaic() {
         fotoUsate++;
         // console.log('foto usate = ' + fotoUsate);
       }
-
     }
   }
 }
 
 
-//------------------------------------------------------------------------------
 
 //for each image available...
 function findImageBrightness() {
+  //if loading == 2 --> mesuring the average brightness of each image
+  loading++;
+
   for (let i = 0; i < allImages.length; i++) {
     // allImages[i].filter(GRAY);
     allImages[i].loadPixels();
@@ -414,9 +448,7 @@ function findImageBrightness() {
     brgValues[i] = avgBrg;
 
     //console.log('immagine ' + i);
-  //  console.log('brightness ' + avgBrg);
-
+    //  console.log('brightness ' + avgBrg);
   }
-
   analyzeCoverPixels();
 }
