@@ -130,8 +130,9 @@ else if (wg==1000){
 }
 
 function right_function(){
+  leftButton.show();
   if(left_g==0){
-    geft_g=0
+    left_g=0;
   }
   else{
   left_g+=50;
@@ -140,7 +141,7 @@ function right_function(){
 
 function left_function(){
   if (left_g== (-(wg-canvas.width))){
-    left_g=(-(wg-canvas.width))
+    left_g=(-(wg-canvas.width));
   }
   else{
   left_g-=50;
@@ -150,17 +151,15 @@ function left_function(){
 function top_function(){
   if (top_g== (-(wg-canvas.height))){
     top_g=(-(wg-canvas.height));
-    topButton.hide();
   }
   else{
   top_g-=50;
-  topButton.show();
 }
 }
 
 function down_function(){
   if(top_g==0){
-    top_g=0
+    top_g=0;
   }
   else{
   top_g+=50;
