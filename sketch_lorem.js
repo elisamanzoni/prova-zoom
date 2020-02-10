@@ -172,7 +172,7 @@ function setup() {
   smaller = createImage(w, h);
   smaller.copy(cover, 0, 0, cover.width, cover.height, 0, 0, w, h);
 
-
+  showButtons();
 }
 
 function showButtons() {
@@ -193,7 +193,7 @@ function showButtons() {
     // open homepage
     let backIcon = '<svg style="width:100px;height:100px" viewBox="0 0 24 24"><path fill="currentColor" d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z" /></svg>';
     backButton = this.newButton(backIcon, "iconButton", openIndex, "header");
-    //backButton.hide();
+    backButton.hide();
     zoomInButton = this.newButton('zoom In', "zoomInButton, mosaicButton", zoomIn, "header");
     zoomInButton.hide();
     zoomOutButton = this.newButton('zoom Out', "zoomOutButton, mosaicButton", zoomOut, "header");
@@ -203,9 +203,9 @@ function showButtons() {
     rightButton = this.newButton('right', "rightButton, mosaicButton", right, "header");
     rightButton.hide();
     topButton = this.newButton('top', "topButton, mosaicButton", up, "header");
-    //topButton.hide();
+    topButton.hide();
     downButton = this.newButton('down', "downButton, mosaicButton", down, "header");
-    //downButton.hide();
+    downButton.hide();
 
   }
   this.initialize();
@@ -375,13 +375,12 @@ function analyzeCoverPixels() {
 }
 
 function drawMosaic() {
-
-  showButtons();
   spinner.hide();
   loadingText.hide();
 
-  // zoomInButton.show();
-  // zoomOutButton.show();
+  zoomInButton.show();
+  zoomOutButton.show();
+  backButton.show();
 
   clear();
   fill('black');
